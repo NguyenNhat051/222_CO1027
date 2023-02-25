@@ -757,7 +757,7 @@ void display(int HP, int level, int remedy, int maidenkiss, int phoenixdown, int
 
 void adventureToKoopa(string file_input, int &HP, int &level, int &remedy, int &maidenkiss, int &phoenixdown, int &rescue)
 {
-    int events[100];
+    int events[10000];
     string file_mush_ghost;
     string file_asclepius_pack;
     string file_merlin_pack;
