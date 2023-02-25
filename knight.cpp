@@ -789,17 +789,11 @@ void adventureToKoopa(string file_input, int &HP, int &level, int &remedy, int &
 
     Knight knight(HP, level, remedy, maidenkiss, phoenixdown);
 
-    cout << "Init State: \n"
-         << knight.toString() << endl;
-
     for (int i = 0; i < num_events; i++)
     {
         int b = (i + 1) % 10;
         int levelO = (i + 1) > 6 ? (b > 5 ? b : 5) : b;
-        cout << "Round: " << i + 1 << endl;
-        cout << "LevelO: " << levelO << endl;
         int event = events[i];
-        cout << "Event: " << event << endl;
         if (knight.getisDwarf())
         {
             knight.setCountAffect(knight.getCountAffect() + 1);
@@ -925,14 +919,12 @@ void adventureToKoopa(string file_input, int &HP, int &level, int &remedy, int &
 
         if (knight.getHP() < 1)
         {
-            cout << "Ngu vcc" << endl;
             rescue = 0;
-            cout << knight.toString() << endl;
+            display(knight.getHP(), knight.getLevel(), knight.getRemedy(), knight.getMaidenKiss(), knight.getPhoenixDown(), rescue);
             return;
         }
-
-        cout << "After round " << i + 1 << endl
-             << knight.toString() << endl;
+        display(knight.getHP(), knight.getLevel(), knight.getRemedy(), knight.getMaidenKiss(), knight.getPhoenixDown(), rescue);
     }
     rescue = 1;
+    display(knight.getHP(), knight.getLevel(), knight.getRemedy(), knight.getMaidenKiss(), knight.getPhoenixDown(), rescue);
 }
