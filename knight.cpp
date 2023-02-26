@@ -493,8 +493,14 @@ public:
         }
     }
 
-    void handleGhostMushRoom(char type, int arr[], int n)
+    void handleGhostMushRoom(char type, int a[], int n)
     {
+        int *arr = new int[n]; // create a copy of the array
+        for (int i = 0; i < n; i++)
+        {
+            arr[i] = a[i];
+        }
+
         if (type == '1')
         {
             int max_val = arr[0], min_val = arr[0];
@@ -513,23 +519,60 @@ public:
                 }
             }
 
-            setHP(this->HP -= (max_last_occurrence + min_last_occurrence));
+            setHP(this->HP - (max_last_occurrence + min_last_occurrence));
         }
         if (type == '2')
         {
             int mtx = -2, mti = -3;
-
-            for (int i = 1; i < n - 1; i++)
+            int max_idx = 0;
+            for (int i = 1; i < n; i++)
             {
-                if (arr[i] > arr[i - 1] && arr[i] > arr[i + 1])
+                if (arr[i] > arr[max_idx])
                 {
-                    mtx = arr[i];
-                    mti = i;
-                    break;
+                    max_idx = i;
                 }
             }
 
-            setHP(this->HP -= (mtx + mti));
+            if (max_idx == 0 || max_idx == n - 1)
+            {
+                mtx = arr[max_idx];
+                mti = max_idx;
+            }
+            else
+            {
+                bool isIncreasing = true;
+                for (int i = 0; i < max_idx; i++)
+                {
+                    if (arr[i] >= arr[i + 1])
+                    {
+                        isIncreasing = false;
+                        break;
+                    }
+                }
+
+                bool isDecreasing = true;
+                for (int i = max_idx; i < n - 1; i++)
+                {
+                    if (arr[i] <= arr[i + 1])
+                    {
+                        isDecreasing = false;
+                        break;
+                    }
+                }
+
+                if (isIncreasing && isDecreasing)
+                {
+                    mtx = arr[max_idx];
+                    mti = max_idx;
+                }
+                else
+                {
+                    mtx = -2;
+                    mti = -3;
+                }
+            }
+
+            setHP(getHP() - (mtx + mti));
         }
         if (type == '3')
         {
@@ -540,7 +583,10 @@ public:
                 {
                     arr[i] = -arr[i];
                 }
-                arr[i] = (17 * arr[i] + 9) % 257;
+                else
+                {
+                    arr[i] = (17 * arr[i] + 9) % 257;
+                }
             }
 
             // Find the positions of the max and min values in the transformed array
@@ -558,7 +604,7 @@ public:
             }
 
             // Calculate HP and print the result
-            setHP(this->HP -= (maxi2 + mini2));
+            setHP(getHP() - (maxi2 + mini2));
         }
         if (type == '4')
         {
@@ -577,42 +623,57 @@ public:
 
             // Find the second largest number and its position in the first three numbers of the array
             int max2_3x = -5, max2_3i = -7;
-            if (n >= 3)
+            int max = arr[0];
+            int secondMax = arr[1];
+            int position = 1;
+            if (arr[2] > max)
             {
-                int max = arr[0];
-                int second_max = arr[0];
-
-                for (int i = 0; i < n; i++)
+                secondMax = max;
+                max = arr[2];
+                position = 2;
+            }
+            else if (arr[2] > secondMax)
+            {
+                secondMax = arr[2];
+                position = 2;
+            }
+            if (position == 1)
+            {
+                if (arr[1] > arr[2])
                 {
-                    if (arr[i] > max)
-                    {
-                        second_max = max;
-                        max = arr[i];
-                    }
-                    else if (arr[i] > second_max && arr[i] != max)
-                    {
-                        second_max = arr[i];
-                    }
+                    max2_3x = arr[1];
+                    max2_3i = 1;
                 }
-
-                for (int i = 0; i < 3; i++)
+                else
                 {
-                    if (second_max == max)
-                    {
-                        break;
-                    }
-                    if (arr[i] == second_max)
-                    {
-                        max2_3x = second_max;
-                        max2_3i = i;
-                        break;
-                    }
+                    max2_3x = arr[2];
+                    max2_3i = 2;
                 }
+            }
+            else if (position == 2)
+            {
+                if (arr[0] > arr[1])
+                {
+                    max2_3x = arr[0];
+                    max2_3i = 0;
+                }
+                else
+                {
+                    max2_3x = arr[1];
+                    max2_3i = 1;
+                }
+            }
+            else
+            {
+                max2_3x = -5;
+                max2_3i = -7;
             }
 
             // Update HP
-            setHP(this->HP -= (max2_3x + max2_3i));
+            setHP(getHP() - (max2_3x + max2_3i));
         }
+
+        delete[] arr;
     }
 
     void handleMeetMerlin(string file_merlin_pack)
@@ -885,9 +946,16 @@ void adventureToKoopa(string file_input, int &HP, int &level, int &remedy, int &
             file_in >> n2;
 
             int a[n2];
+            string line;
+            getline(file_in, line);
+            getline(file_in, line); // read the whole line as a string
+            stringstream ss(line);  // create a stringstream from the string
+
             for (int i = 0; i < n2; i++)
             {
-                file_in >> a[i];
+                string number_str;
+                getline(ss, number_str, ','); // read the next number as a string, using comma as delimiter
+                a[i] = stoi(number_str);      // convert the string to integer and store in the array
             }
 
             file_in.close();
