@@ -583,10 +583,7 @@ public:
                 {
                     arr[i] = -arr[i];
                 }
-                else
-                {
-                    arr[i] = (17 * arr[i] + 9) % 257;
-                }
+                arr[i] = (17 * arr[i] + 9) % 257;
             }
 
             // Find the positions of the max and min values in the transformed array
@@ -615,10 +612,7 @@ public:
                 {
                     arr[i] = -arr[i];
                 }
-                else
-                {
-                    arr[i] = (17 * arr[i] + 9) % 257;
-                }
+                arr[i] = (17 * arr[i] + 9) % 257;
             }
 
             // Find the second largest number and its position in the first three numbers of the array
@@ -863,6 +857,7 @@ void adventureToKoopa(string file_input, int &HP, int &level, int &remedy, int &
         {
         case 0: // Bowser đầu hàng và trả lại công chúa
             rescue = 1;
+            display(knight.getHP(), knight.getLevel(), knight.getRemedy(), knight.getMaidenKiss(), knight.getPhoenixDown(), rescue);
             return;
         case 1: // Gặp gấu MadBear
             knight.fight(MadBear(levelO));
@@ -991,7 +986,10 @@ void adventureToKoopa(string file_input, int &HP, int &level, int &remedy, int &
             display(knight.getHP(), knight.getLevel(), knight.getRemedy(), knight.getMaidenKiss(), knight.getPhoenixDown(), rescue);
             return;
         }
-        display(knight.getHP(), knight.getLevel(), knight.getRemedy(), knight.getMaidenKiss(), knight.getPhoenixDown(), rescue);
+        if (i < num_events - 1)
+        {
+            display(knight.getHP(), knight.getLevel(), knight.getRemedy(), knight.getMaidenKiss(), knight.getPhoenixDown(), rescue);
+        }
     }
     rescue = 1;
     display(knight.getHP(), knight.getLevel(), knight.getRemedy(), knight.getMaidenKiss(), knight.getPhoenixDown(), rescue);
